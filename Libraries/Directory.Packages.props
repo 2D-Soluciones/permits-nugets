@@ -1,0 +1,32 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <!--
+        Una sola version por paquete para todo el repo. Antes cada csproj traia la suya, y Domain quedo pinneado a
+        DDS.General 26.7.23.1727 mientras AspNetCore y DataTable usaban 26.7.23.2036: Domain compilaba contra un
+        General mas viejo que el resto sin que nada lo dijera.
+
+        Recortado respecto del repo original: se fueron DDS.General (ahora es ProjectReference),
+        Microsoft.AspNetCore.Authentication.JwtBearer y System.IdentityModel.Tokens.Jwt (con AddJwtAuthentication),
+        System.IO.Hashing (con el handler de ETag), OpenTelemetry (no habia un solo using),
+        Npgsql.EntityFrameworkCore.PostgreSQL (con AspNetCore.ETag.PostgreSQL) y el bloque de tests/benchmarks,
+        que no se extrajeron.
+    -->
+  <ItemGroup>
+    <PackageVersion Include="Corvus.Globbing" Version="2.0.1" />
+    <PackageVersion Include="Mediator.Abstractions" Version="3.0.2" />
+    <PackageVersion Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Telemetry.Abstractions" Version="10.10.0" />
+    <PackageVersion Include="Vogen" Version="8.0.7" />
+  </ItemGroup>
+  <!-- Los que Directory.Build.props le agrega a todos los proyectos. -->
+  <ItemGroup>
+    <PackageVersion Include="ConfigureAwait.Fody" Version="3.4.1" />
+    <PackageVersion Include="Fody" Version="6.9.3" />
+    <PackageVersion Include="JetBrains.Annotations" Version="2026.2.0" />
+  </ItemGroup>
+</Project>

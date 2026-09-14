@@ -1,0 +1,16 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+  </Configurations>
+  <Folder Name="/Libraries/">
+    <Project Path="Libraries/General/General.csproj" />
+    <Project Path="Libraries/Domain/Domain.csproj" />
+    <Project Path="Libraries/Repository/Repository.csproj" />
+    <Project Path="Libraries/AspNetCore/AspNetCore.csproj" />
+    <Project Path="Libraries/AspNetCore.OpenApi/AspNetCore.OpenApi.csproj" />
+  </Folder>
+  <Folder Name="/Observability/">
+    <Project Path="Observability/Observability/Observability.csproj" />
+  </Folder>
+</Solution>

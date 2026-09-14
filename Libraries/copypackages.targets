@@ -1,0 +1,14 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target BeforeTargets="GenerateNuspec" Name="CleanupNuget" Condition="$(Configuration) == 'Release'">
+        <Message Text="Cleaning up old packages from $(Configuration)"/>
+        <ItemGroup>
+            <OldPackages Include="$(BaseOutputPath)$(Configuration)\$(PackageId).*.nupkg"/>
+        </ItemGroup>
+        <Delete Files="@(OldPackages)"/>
+    </Target>
+
+    <Target AfterTargets="Pack" Name="CopyPackage" Condition="$(Configuration) == 'Release'">
+        <Message Text="Copying new packages to local library"/>
+        <Copy SourceFiles="$(BaseOutputPath)$(Configuration)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(MSBuildThisFileDirectory)nugets"/>
+    </Target>
+</Project>

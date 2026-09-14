@@ -1,0 +1,40 @@
+<Project>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Configurations>Debug;Release</Configurations>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <Features>strict</Features>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <IsAotCompatible>true</IsAotCompatible>
+        <!--<JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>-->
+        <AnalysisLevel>preview</AnalysisLevel>
+        <AssemblyTitle>$(AssemblyName)</AssemblyTitle>
+        <PackageId>$(AssemblyName)</PackageId>
+
+        <VersionPrefix>$([System.DateTime]::Now.ToString("yy.M.d.Hmm"))</VersionPrefix>
+        <Copyright>Copyright $([System.DateTime]::Now.Year) © 2D Soluciones</Copyright>
+        <Authors>Marcelo Volmaro</Authors>
+        <Company>2D Soluciones</Company>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(Configuration) == 'Release'">
+        <IsPackable>true</IsPackable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations"/>
+
+        <PackageReference Include="Fody">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <PackageReference Include="ConfigureAwait.Fody">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>compile; build</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+</Project>

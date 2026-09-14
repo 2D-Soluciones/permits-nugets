@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Description>DDS minimal api for aspnetcore.</Description>
+        <AssemblyName>DDS.AspNetCore</AssemblyName>
+        <RootNamespace>$(AssemblyName)</RootNamespace>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="AspNetCoreTests"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="FodyWeavers.xml"/>
+        <None Remove="AspNetCore.csproj.DotSettings" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Corvus.Globbing" />
+        <PackageReference Include="Microsoft.Extensions.Telemetry.Abstractions" />
+        <ProjectReference Include="../General/General.csproj" />
+        <PackageReference Include="Vogen" />
+        <PackageReference Include="Mediator.Abstractions" />
+    </ItemGroup>
+
+    <Import Project="..\copypackages.targets"/>
+</Project>

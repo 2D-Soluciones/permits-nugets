@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Description>DDS domain pattern for .netcore</Description>
+        <AssemblyName>DDS.Domain</AssemblyName>
+        <RootNamespace>DDS.Domain</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../General/General.csproj" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Vogen" />
+        <PackageReference Include="Mediator.Abstractions" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="FodyWeavers.xml" />
+    </ItemGroup>
+
+    <Import Project="..\copypackages.targets"/>
+</Project>

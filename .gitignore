@@ -1,0 +1,7 @@
+bin/
+obj/
+nugets/
+
+# Andamiaje del recorte y notas de trabajo: quedan en local, no se publican.
+_recorte/
+README.md

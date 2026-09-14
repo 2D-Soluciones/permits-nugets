@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Description>DDS repository pattern for .netcore</Description>
+        <AssemblyName>DDS.Repository</AssemblyName>
+        <RootNamespace>DDS.Repository</RootNamespace>
+        <IsAotCompatible>false</IsAotCompatible>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Mediator.Abstractions" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="FodyWeavers.xml"/>
+        <None Remove="Repository.csproj.DotSettings"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+
+    <Import Project="..\copypackages.targets"/>
+</Project>
