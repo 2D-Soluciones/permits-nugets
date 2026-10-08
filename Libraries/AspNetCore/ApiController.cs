@@ -18,7 +18,7 @@ namespace DDS.AspNetCore;
 [Produces("application/json")]
 public abstract class ApiController : ControllerBase
 {
-	private readonly ISender _sender;
+	private readonly ISender? _sender;
 
 	/// <summary>
 	///     Inicializa una instancia nueva de <see cref="ApiController" />.
@@ -32,9 +32,24 @@ public abstract class ApiController : ControllerBase
 	}
 
 	/// <summary>
+	///     Inicializa una instancia nueva de <see cref="ApiController" /> sin <see cref="ISender" />, para controllers que
+	///     no usan Mediator. Los metodos Run*/Send* tiran <see cref="InvalidOperationException" />.
+	/// </summary>
+	/// <param name="logger"></param>
+	protected ApiController(ILogger logger)
+	{
+		Logger = logger;
+	}
+
+	/// <summary>
 	///     La instancia de <see cref="ILogger" /> asociada a este controller.
 	/// </summary>
 	protected ILogger Logger { get; }
+
+	private ISender Sender
+	{
+		get { return _sender ?? throw new InvalidOperationException("Este controller se creo sin ISender: no puede usar los metodos Run*/Send*."); }
+	}
 
 	/// <summary>
 	///     Convierte un <see cref="ErrorResult" /> en un <see cref="ProblemDetails" /> y devuelve el valor por el
@@ -153,7 +168,7 @@ public abstract class ApiController : ControllerBase
 	/// <returns></returns>
 	protected async Task<IActionResult> RunQuery<TQuery, TResponse>(TQuery query) where TQuery : class, IQuery<Result<TResponse>>
 	{
-		var result = await _sender.Send(query, HttpContext.RequestAborted);
+		var result = await Sender.Send(query, HttpContext.RequestAborted);
 		return result.Match<IActionResult>(response => Ok(response), validationResult => GetProblemDetails(validationResult));
 	}
 
@@ -166,7 +181,7 @@ public abstract class ApiController : ControllerBase
 	/// <returns></returns>
 	protected async Task<IActionResult> RunContentQuery<TQuery>(TQuery query, string? contentType = null) where TQuery : class, IQuery<Result<string>>
 	{
-		var result = await _sender.Send(query, HttpContext.RequestAborted);
+		var result = await Sender.Send(query, HttpContext.RequestAborted);
 		return result.Match<IActionResult>(response => Content(response, contentType ?? ContentType.Text), validationResult => GetProblemDetails(validationResult));
 	}
 
@@ -192,7 +207,7 @@ public abstract class ApiController : ControllerBase
 	/// <returns></returns>
 	protected async Task<IActionResult> RunUnvalidatedCommand<TCommand, TResponse>(TCommand command) where TCommand : class, ICommand<TResponse>
 	{
-		return Ok(await _sender.Send(command, CancellationToken.None));
+		return Ok(await Sender.Send(command, CancellationToken.None));
 	}
 
 	/// <summary>
@@ -204,7 +219,7 @@ public abstract class ApiController : ControllerBase
 	/// <returns></returns>
 	protected async Task<IActionResult> RunUnvalidatedQuery<TQuery, TResult>(TQuery query) where TQuery : class, IQuery<TResult> where TResult : class
 	{
-		return Ok(await _sender.Send(query, HttpContext.RequestAborted));
+		return Ok(await Sender.Send(query, HttpContext.RequestAborted));
 	}
 
 	/// <summary>
@@ -221,7 +236,7 @@ public abstract class ApiController : ControllerBase
 	/// <returns></returns>
 	protected ValueTask<Result> SendCommand<TCommand>(TCommand command) where TCommand : class, ICommand<Result>
 	{
-		return _sender.Send(command, CancellationToken.None);
+		return Sender.Send(command, CancellationToken.None);
 	}
 
 	/// <summary>
@@ -234,7 +249,7 @@ public abstract class ApiController : ControllerBase
 	/// <returns></returns>
 	protected ValueTask<Result<TResponse>> SendCommand<TCommand, TResponse>(TCommand command) where TCommand : class, ICommand<Result<TResponse>>
 	{
-		return _sender.Send(command, CancellationToken.None);
+		return Sender.Send(command, CancellationToken.None);
 	}
 
 	/// <summary>
@@ -247,7 +262,7 @@ public abstract class ApiController : ControllerBase
 	/// <returns></returns>
 	protected ValueTask<Result<TResponse>> SendQuery<TQuery, TResponse>(TQuery query) where TQuery : class, IQuery<Result<TResponse>>
 	{
-		return _sender.Send(query, HttpContext.RequestAborted);
+		return Sender.Send(query, HttpContext.RequestAborted);
 	}
 
 	/// <summary>
@@ -260,12 +275,12 @@ public abstract class ApiController : ControllerBase
 	/// <returns></returns>
 	protected ValueTask<TResponse> SendUnvalidatedQuery<TQuery, TResponse>(TQuery query) where TQuery : class, IQuery<TResponse>
 	{
-		return _sender.Send(query, HttpContext.RequestAborted);
+		return Sender.Send(query, HttpContext.RequestAborted);
 	}
 
 	private IAsyncEnumerable<TResponse> SendStreamCommand<TCommand, TResponse>(TCommand command) where TCommand : class, IStreamCommand<TResponse>
 	{
 		HttpContext.Features.Get<IHttpResponseBodyFeature>()?.DisableBuffering();
-		return _sender.CreateStream(command, HttpContext.RequestAborted);
+		return Sender.CreateStream(command, HttpContext.RequestAborted);
 	}
 }
